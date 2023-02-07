@@ -12,6 +12,7 @@ def create_micromint_coin(netid, k=4, n=28):
     watermark = hashlib.sha256(netid.encode("ascii")).hexdigest()[:4]
 
     print(watermark)
+    print(bin(int(watermark, base=16))[2:].zfill(16))
 
     counter = 0
     while True:
