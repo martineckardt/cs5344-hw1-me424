@@ -15,10 +15,10 @@ def test_basic(objects):
         p = Prover()
         p.build_merkle_tree(deepcopy(objects))
         n = len(objects)
+
         positive_indices = [random.randint(0, n-1) for x in range(4)]
         positive_indices += [0, n-1]
-        negative_indices = [random.randint(n, 2*n) for x in range(2)]
-        negative_indices += [n]
+
         for i in positive_indices:
             try:
                 ret = p.get_leaf(i)
@@ -26,6 +26,9 @@ def test_basic(objects):
                     _leaf_passed += 1
             except:
                 pass
+
+        negative_indices = [random.randint(n, 2*n) for x in range(2)]
+        negative_indices += [n]
         for i in negative_indices:
             try:
                 ret = p.generate_proof(i)
