@@ -1,7 +1,8 @@
 import string
 import random
 import hashlib
-from merkle import Prover, verify
+from math import floor
+from pprint import pprint
 
 # return the hash of a string
 
@@ -39,34 +40,73 @@ class MTSignature:
         self.sk = [None] * (1 << d)
         self.pk = None  # same as self.treenodes[0][0]
 
-        self.p = Prover()
-
     # Populate the fields self.treenodes, self.sk and self.pk. Returns self.pk.
 
     def KeyGen(self, seed: int) -> string:
-        p = Prover()
         pairs = KeyPairGen(self.d, seed)
 
-        self.treenodes = [pk for (sk, pk) in pairs.items()]
-        self.sk = [sk for (sk, pk) in pairs.items()]
-        self.pk = p.build_merkle_tree(self.treenodes)
+        # Start with the public keys on the lowest level of the tree
+        nodes = list(pairs.values())
+        self.treenodes = [nodes]
+
+        # Build the tree upwards
+        while len(nodes) > 1:
+            # Compute the parent nodes
+            parents = [SHA(nodes[i] + nodes[i+1])
+                       for i in range(0, len(nodes), 2)]
+
+            # Add the parent nodes to the tree
+            self.treenodes.insert(0, parents)
+            nodes = parents
+
+        self.sk = list(pairs.keys())
+
+        # The root of the tree is the public key
+        self.pk = self.treenodes[0][0]
+        print('=== Tree ===')
+        pprint(self.treenodes)
 
         return self.pk
 
     # Returns the path SPj for the index j
     # The order in SPj follows from the leaf to the root.
     def Path(self, j: int) -> string:
-        proof = self.p.generate_proof(j)
 
-        # TODO Translate proof to concatenated string (deterministic order of parents)
-        path = ''
+        level = self.d
+        path = []
 
-        return path
+        while level > 0:
+            # Calcluate the sibling index
+            if j % 2 == 0:
+                j += 1
+            else:
+                j -= 1
+
+            path.append(self.treenodes[level][j])
+            level -= 1
+
+            # Calculate the parent index
+            j = floor(j/2)
+
+        print('=== Path ===')
+        print(path)
+
+        return "".join(path)
 
     # Returns the signature. The format of the signature is as follows: ([sigma], [SP]).
     # The first is a sequence of sigma values and the second is a list of sibling paths.
     # Each sibling path is in turn a d-length list of tree node values.
     # All values are 64 bytes. Final signature is a single string obtained by concatentating all values.
     def Sign(self, msg: string) -> string:
+        js = [format(j, "b").zfill(256) for j in range(1, self.k)]
+
+        # Determine which key shall be used
         # zj = H(j ∥ m) mod 2^d
-        return NotImplementedError
+        z_j = [SHA(j + msg) % (2 ** self.d) for j in js]
+
+        # Compute the sigma values
+        sigma = [SHA(self.sk[z] + msg) for z in z_j]
+
+        SP = [self.Path(z) for z in z_j]
+
+        return "".join(sigma) + "".join(SP)

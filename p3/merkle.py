@@ -80,14 +80,11 @@ class Prover:
 
             sibling = self.tree[self.calc_sibling_index(next_node_index)]
 
-            if (self.is_left_sibling(next_node_index)):
-                proof = [proof, sibling]
-            else:
-                proof = [sibling, proof]
+            proof = proof + sibling
 
             next_node_index = self.calc_parent_index(next_node_index)
 
-        return dumps(proof)
+        return proof
 
     def is_left_sibling(self, index):
         return index % 2 == 1
