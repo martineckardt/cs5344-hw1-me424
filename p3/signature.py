@@ -87,8 +87,8 @@ class MTSignature:
             # Calculate the parent index
             j = floor(j/2)
 
-        print('=== Path ===')
-        print(path)
+        # print('=== Path ===')
+        # print(path)
 
         return "".join(path)
 
@@ -107,7 +107,7 @@ class MTSignature:
             sigma.append(self.sk[z_j])
             SP.append(self.Path(z_j))
 
-        print("Signature: " + "".join(sigma) + "".join(SP))
+        # print("Signature: " + "".join(sigma) + "".join(SP))
 
         return "".join(sigma) + "".join(SP)
 
