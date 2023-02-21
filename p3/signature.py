@@ -44,7 +44,6 @@ class MTSignature:
 
     def KeyGen(self, seed: int) -> string:
         pairs = KeyPairGen(self.d, seed)
-
         # Start with the public keys on the lowest level of the tree
         nodes = list(pairs.values())
         self.treenodes = [nodes]
@@ -52,7 +51,7 @@ class MTSignature:
         # Build the tree upwards
         while len(nodes) > 1:
             # Compute the parent nodes
-            parents = [SHA(nodes[i] + nodes[i+1])
+            parents = [SHA(format(floor(i/2), "b").zfill(256) + nodes[i] + nodes[i+1])
                        for i in range(0, len(nodes), 2)]
 
             # Add the parent nodes to the tree
@@ -110,3 +109,7 @@ class MTSignature:
         SP = [self.Path(z) for z in z_j]
 
         return "".join(sigma) + "".join(SP)
+
+
+m = MTSignature(4, 3)
+m.KeyGen(1)
