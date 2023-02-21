@@ -101,12 +101,14 @@ class MTSignature:
 
         # Determine which key shall be used
         # zj = H(j ∥ m) mod 2^d
-        z_j = [SHA(j + msg) % (2 ** self.d) for j in js]
+        z_j = [int(SHA(j + msg), 16) % (2 ** self.d) for j in js]
 
         # Compute the sigma values
         sigma = [SHA(self.sk[z] + msg) for z in z_j]
 
         SP = [self.Path(z) for z in z_j]
+
+        print("Signature: " + "".join(sigma) + "".join(SP))
 
         return "".join(sigma) + "".join(SP)
 
