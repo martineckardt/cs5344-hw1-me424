@@ -97,16 +97,15 @@ class MTSignature:
     # Each sibling path is in turn a d-length list of tree node values.
     # All values are 64 bytes. Final signature is a single string obtained by concatentating all values.
     def Sign(self, msg: string) -> string:
-        js = [format(j, "b").zfill(256) for j in range(1, self.k)]
 
-        # Determine which key shall be used
-        # zj = H(j ∥ m) mod 2^d
-        z_j = [int(SHA(j + msg), 16) % (2 ** self.d) for j in js]
+        sigma = []
+        SP = []
 
-        # Compute the sigma values
-        sigma = [SHA(self.sk[z] + msg) for z in z_j]
-
-        SP = [self.Path(z) for z in z_j]
+        for j in range(1, self.k+1):
+            # Calculate the index z_j of private key used to sign the message
+            z_j = int(SHA(format(j, "b").zfill(256) + msg), 16) % (2 ** self.d)
+            sigma.append(self.sk[z_j])
+            SP.append(self.Path(z_j))
 
         print("Signature: " + "".join(sigma) + "".join(SP))
 
