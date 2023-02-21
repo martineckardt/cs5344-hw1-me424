@@ -1,11 +1,4 @@
-import sys
-import random
-import string
 from merkle import Prover, verify
-from collections import defaultdict
-from matplotlib import pyplot as plt
-from hashlib import sha256
-from math import log2, ceil
 from copy import deepcopy
 
 

@@ -1,0 +1,7 @@
+3.2: Forged signature was found("This is a test message", "The statistics troubleshoots.")
+
+3.3: d=16
+If k=1 this means that every signature is using a single key. The number of generated key pairs is 2 ** d. 
+
+In the lecture we discussed that E[X] ≈ 1/2 when |m| ** 2 ≈ N. With 200 message N = 40,000. Therefore, we need to find a
+d such that 2 ** d is greater than 40.000. Therefore log2(40,400) = 15.28 and we can take the next bigger number 16.

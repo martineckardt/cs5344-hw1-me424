@@ -9,11 +9,14 @@ signature = S1.Sign("This is a test message")
 
 print(signature)
 forged_signature = ""
+sentence = ""
+
+print("Forging a signature...")
 
 while signature != forged_signature:
     sentence = s.bare_bone_sentence()
-    forged_signature = S1.Sign(sentence)
+    forged_signature = S1.Sign(str(sentence))
 
-print(sentence)
+print("Sentence: " + sentence)
 print(forged_signature)
 

@@ -14,7 +14,7 @@ def verify(obj: str, proof: str, commitment: str) -> bool:
     try:
         return commitment == calc_commitment(proof, obj)
     except Exception as e:
-        print("Error in verify: ", e)
+        # print("Error in verify: ", e)
         return False
 
 
@@ -57,7 +57,7 @@ class Prover:
                        for i in range(0, len(parents), 2)]
             self.tree = parents + self.tree
 
-        print(self.tree)
+        # print(self.tree)
         return self.tree[0]
 
     def get_leaf(self, index: int) -> Optional[str]:

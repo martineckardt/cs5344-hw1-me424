@@ -62,8 +62,8 @@ class MTSignature:
 
         # The root of the tree is the public key
         self.pk = self.treenodes[0][0]
-        print('=== Tree ===')
-        pprint(self.treenodes)
+        # print('=== Tree ===')
+        # pprint(self.treenodes)
 
         return self.pk
 
@@ -102,7 +102,7 @@ class MTSignature:
         SP = []
 
         for j in range(1, self.k+1):
-            # Calculate the index z_j of private key used to sign the message
+            # Calculate the index z_j of signing key used to sign the message
             z_j = int(SHA(format(j, "b").zfill(256) + msg), 16) % (2 ** self.d)
             sigma.append(self.sk[z_j])
             SP.append(self.Path(z_j))
